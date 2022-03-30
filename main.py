@@ -1,6 +1,4 @@
-import requests
+from indeed import extract_indeed_pages
 
-indeed_result = requests.get("https://search.indeed.jobs/main/jobs?keywords=python&location=&limit=100&page=1")
-
-# indeed_result.text: html 전부 가져오기
-print(indeed_result.text)
+max_indeed_pages = extract_indeed_pages()
+print(max_indeed_pages)
