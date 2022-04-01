@@ -22,24 +22,45 @@ def extract_indeed_pages():
     return last_page
 
 
-def extract_indeed_jobs(last_page):
-    jobs = []
+def extract_job(html):
 
-    # 페이지에서 각 title, company 가져오기
+    # 각 모집공고 제목 가져오기
+    title = html.find("div", {"class": "title"}).find("a")["title"]
+
+    # 각 모집공고 회사명 가져오기
+    company = html.find("span", {"class": "company"})
+    company_anchor = company.find("a")
+    if company_anchor is not None:
+        company = str(company_anchor.string)
+    else:
+        company = str(company.string)
+    company = company.strip()       
+
+    # 각 모집공고 위치 가져오기
+    location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
+
+    # 각 모집공고 지원링크 id 가져오기
+    job_id = html["data-jk"]
+
+    return {
+        "title": title, 
+        "company": company, 
+        "location": location, 
+        "link": f"https://www.indeed.com/viewjob?jk={job_id}"
+        }  
+
+
+
+def extract_indeed_jobs(last_page):
+    
+    jobs = []
     for page in range(last_page):
         result = requests.get(f"{URL}&start={page*LIMIT}")
         soup = BeautifulSoup(result.text, 'html.parser')
         results = soup.find_all("div", {"class" : "jobsearch-SerpJobCard"})
-
         for job_result in results:
-            title = job_result.find("div", {"class": "title"}).find("a")["title"]
-            company = job_result.find("span", {"class": "company"})
-            company_anchor = company.find("a")
-            if company_anchor is not None:
-                company = str(company_anchor.string)
-            else:
-                company = str(company.string)
-            company = company.strip()         
-
+            job = extract_job(job_result)
+            jobs.append(job)
+            
     return jobs
 
