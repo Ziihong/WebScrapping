@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 
 LIMIT = 100
 URL = f"https://search.indeed.jobs/main/jobs?keywords=python&location=&page=1&limit={LIMIT}&sortBy=relevance"
-#stackoverflow_URL = f"https://stackoverflow.com/questions/tagged/python?tab=newest&page=1&pagesize={LIMIT}"
 
 def extract_indeed_pages():
 
@@ -61,6 +60,11 @@ def extract_indeed_jobs(last_page):
         for job_result in results:
             job = extract_job(job_result)
             jobs.append(job)
-            
+
     return jobs
 
+
+def get_jobs():
+    last_page = extract_indeed_pages()
+    jobs = extract_indeed_jobs(last_page)
+    return jobs
