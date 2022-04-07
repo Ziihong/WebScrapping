@@ -18,7 +18,7 @@ def extract_job(html):
     
     title = html.find("div", {"class": "flex--item fl1 text mb0"}).find("h2").find("a").string
 
-    company, location = html.find("div", {"class": "flex--item fl1 text mb0"}).find_all("div", {"class": "flex--item fc-black-500 fs-body1"})
+    location, company = html.find("div", {"class": "flex--item fl1 text mb0"}).find_all("div", {"class": "flex--item fc-black-500 fs-body1"})
     company = company.get_text(strip=True)
 
     location = location.get_text(strip=True)
